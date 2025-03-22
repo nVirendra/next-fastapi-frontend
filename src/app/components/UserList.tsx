@@ -4,6 +4,7 @@ import { User, UserCreate } from '../types/user';
 import UserForm from './UserForm';
 import UserTable from './UserTable';
 import { fetchUsers, createUser, updateUser, deleteUser } from '@/lib/api';
+import { AxiosError } from 'axios';
 
 const PAGE_SIZE = 5;
 
@@ -13,6 +14,7 @@ export default function UserList() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const loadUsers = async () => {
     const skip = (currentPage - 1) * PAGE_SIZE;
@@ -26,14 +28,24 @@ export default function UserList() {
   }, [search, currentPage]);
 
   const handleCreate = async (userData: UserCreate) => {
-    if (selectedUser) {
-      await updateUser(selectedUser.id, userData);
-      setSelectedUser(null);
-    } else {
-      await createUser(userData);
+    try {
+      setError(null);
+      if (selectedUser) {
+        await updateUser(selectedUser.id, userData);
+        setSelectedUser(null);
+      } else {
+        await createUser(userData);
+      }
+      setCurrentPage(1);
+      loadUsers();
+    } catch (err) {
+      const axiosError = err as AxiosError<{ detail: string }>;
+      if (axiosError.response?.status === 400) {
+        setError(axiosError.response.data.detail);
+      } else {
+        setError('Something went wrong.');
+      }
     }
-    setCurrentPage(1); // reset to first page after create/update
-    loadUsers();
   };
 
   const handleDelete = async (id: string) => {
@@ -58,6 +70,7 @@ export default function UserList() {
           setCurrentPage(1);
         }}
       />
+      {error && <div className="text-red-600 font-medium mb-3">{error}</div>}
 
       <UserForm onSubmit={handleCreate} selectedUser={selectedUser} />
       <UserTable
