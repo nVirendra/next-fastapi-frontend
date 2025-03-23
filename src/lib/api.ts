@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { User, UserCreate } from '@/app/types/user';
 
-const API_BASE = 'http://localhost:8000'; // change if deployed
+const API_BASE = 'http://localhost:8000/api/v1'; // change if deployed
 
 export const fetchUsers = async (
   search = '',
