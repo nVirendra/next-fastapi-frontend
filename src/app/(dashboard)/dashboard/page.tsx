@@ -33,17 +33,17 @@ export default function Dashboard() {
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
       {/* Sidebar */}
       <aside
-        className={`fixed md:relative w-64 bg-blue-700 text-white p-6 h-full z-50 shadow-xl transition-transform transform duration-300 ease-in-out md:translate-x-0 ${
+        className={`fixed md:relative w-64 bg-blue-700 text-white z-50 shadow-xl transition-transform transform duration-300 ease-in-out md:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        } h-screen overflow-y-auto flex flex-col`}
       >
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center p-6 pb-0">
           <h1 className="text-2xl font-bold">HRMS</h1>
           <button className="md:hidden" onClick={() => setSidebarOpen(false)}>
             <X size={24} />
           </button>
         </div>
-        <nav className="space-y-4">
+        <nav className="flex-1 p-6 pt-4 space-y-4">
           <SidebarItem
             icon={<Home />}
             label="Dashboard"
