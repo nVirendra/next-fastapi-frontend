@@ -23,12 +23,14 @@ export default function SidebarItem({
     <Link
       href={href}
       className={clsx(
-        'flex items-center px-3 py-2 rounded-md transition text-sm font-medium',
-        isActive ? 'bg-blue-600 text-white' : 'hover:bg-gray-100 text-gray-800'
+        'flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition duration-200',
+        isActive
+          ? 'bg-white text-blue-800 shadow-sm'
+          : 'hover:bg-blue-600 hover:text-white text-blue-100/90'
       )}
     >
-      <Icon className="w-5 h-5" />
-      <span className="ml-2 hidden md:block">{name}</span>
+      <Icon className="w-5 h-5 shrink-0" />
+      <span className="hidden md:block">{name}</span>
     </Link>
   );
 }

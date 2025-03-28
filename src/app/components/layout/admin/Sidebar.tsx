@@ -6,8 +6,8 @@ import SidebarItemWithSubmenu from './SidebarItemWithSubmenu';
 
 export default function AdminSidebar() {
   return (
-    <aside className="w-64 h-screen bg-white border-r shadow-md p-4 overflow-y-auto">
-      <h1 className="text-xl font-bold text-blue-700 mb-6">Admin Panel</h1>
+    <aside className="w-64 h-screen bg-blue-700 text-white p-5 shadow-xl overflow-y-auto">
+      <h1 className="text-2xl font-bold mb-8 tracking-wide">Admin Panel</h1>
 
       <nav className="space-y-2">
         {adminSidebarLinks.map((link) =>
