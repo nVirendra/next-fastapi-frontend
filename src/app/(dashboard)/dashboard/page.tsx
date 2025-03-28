@@ -1,5 +1,3 @@
-'use client';
-
 import StatCard from '@/app/components/layout/admin/StatCard';
 
 export default function DashboardPage() {

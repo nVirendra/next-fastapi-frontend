@@ -1,27 +1,34 @@
-import React from 'react';
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { clsx } from 'clsx';
+import { LucideIcon } from 'lucide-react';
 
 interface SidebarItemProps {
-  icon: React.ReactNode;
-  label: string;
-  activeMenu: string;
-  setActiveMenu: (label: string) => void;
+  name: string;
+  href: string;
+  icon: LucideIcon;
 }
 
-export const SidebarItem: React.FC<SidebarItemProps> = ({
-  icon,
-  label,
-  activeMenu,
-  setActiveMenu,
-}) => {
+export default function SidebarItem({
+  name,
+  href,
+  icon: Icon,
+}: SidebarItemProps) {
+  const pathname = usePathname();
+  const isActive = pathname === href || pathname.startsWith(href);
+
   return (
-    <div
-      className={`flex items-center space-x-3 text-lg py-3 px-4 rounded-md cursor-pointer transition duration-200 ${
-        activeMenu === label ? 'bg-blue-500' : 'hover:bg-blue-500'
-      }`}
-      onClick={() => setActiveMenu(label)}
+    <Link
+      href={href}
+      className={clsx(
+        'flex items-center px-3 py-2 rounded-md transition text-sm font-medium',
+        isActive ? 'bg-blue-600 text-white' : 'hover:bg-gray-100 text-gray-800'
+      )}
     >
-      {icon}
-      <span>{label}</span>
-    </div>
+      <Icon className="w-5 h-5" />
+      <span className="ml-2 hidden md:block">{name}</span>
+    </Link>
   );
-};
+}

@@ -1,60 +1,56 @@
-import React from 'react';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { clsx } from 'clsx';
+import { LucideIcon } from 'lucide-react';
 
 interface SidebarItemWithSubmenuProps {
-  icon: React.ReactNode;
-  label: string;
-  submenu: string[];
-  activeMenu: string;
-  openSubmenu: string | null;
-  setActiveMenu: (label: string) => void;
-  setOpenSubmenu: (label: string | null) => void;
+  name: string;
+  icon: LucideIcon;
+  submenu: { name: string; href: string }[];
 }
 
-export const SidebarItemWithSubmenu: React.FC<SidebarItemWithSubmenuProps> = ({
-  icon,
-  label,
+export default function SidebarItemWithSubmenu({
+  name,
+  icon: Icon,
   submenu,
-  activeMenu,
-  openSubmenu,
-  setActiveMenu,
-  setOpenSubmenu,
-}) => {
-  const isOpen = openSubmenu === label;
+}: SidebarItemWithSubmenuProps) {
+  const pathname = usePathname();
+  const isParentActive = submenu.some((s) => pathname.startsWith(s.href));
 
   return (
     <div>
       <div
-        className={`flex items-center justify-between text-lg py-3 px-4 rounded-md cursor-pointer transition duration-200 ${
-          isOpen || activeMenu === label ? 'bg-blue-500' : 'hover:bg-blue-500'
-        }`}
-        onClick={() => {
-          setOpenSubmenu(isOpen ? null : label);
-          setActiveMenu(label);
-        }}
+        className={clsx(
+          'flex items-center px-3 py-2 rounded-md text-sm font-medium transition',
+          isParentActive ? 'bg-blue-600 text-white' : 'text-gray-800'
+        )}
       >
-        <div className="flex items-center space-x-3">
-          {icon}
-          <span>{label}</span>
-        </div>
-        {isOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+        <Icon className="w-5 h-5" />
+        <span className="ml-2 hidden md:block">{name}</span>
       </div>
 
-      {isOpen && (
-        <div className="ml-8 space-y-2 text-sm text-gray-200">
-          {submenu.map((item, index) => (
-            <div
-              key={index}
-              className={`py-2 px-4 rounded-md cursor-pointer transition duration-200 ${
-                activeMenu === item ? 'bg-blue-400' : 'hover:bg-blue-400'
-              }`}
-              onClick={() => setActiveMenu(item)}
+      <div className="ml-6 mt-1 space-y-1">
+        {submenu.map((sub) => {
+          const isSubActive =
+            pathname === sub.href || pathname.startsWith(sub.href);
+          return (
+            <Link
+              key={sub.name}
+              href={sub.href}
+              className={clsx(
+                'block px-3 py-1 rounded-md text-sm',
+                isSubActive
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'hover:bg-gray-100 text-gray-700'
+              )}
             >
-              {item}
-            </div>
-          ))}
-        </div>
-      )}
+              {sub.name}
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
-};
+}
